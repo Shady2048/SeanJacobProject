@@ -6,8 +6,8 @@ public class enemyType1 : MonoBehaviour
     private BoxCollider2D boxCollider;
 
     public float moveSpeed = 5f;
-    float horizontalMovement = 1; //positive - right, negative - left, 0 - not moving
-    bool moveLeft = false;
+    float horizontalMovement = 0; //positive - right, negative - left, 0 - not moving
+    public bool moveLeft = false;
 
     //to check if needs to turn around
     public LayerMask wallLayer;
@@ -15,6 +15,12 @@ public class enemyType1 : MonoBehaviour
     //to provide delay between change in enemy movemnt
     public float changeDelay = 2f; //time in seconds
     float nextChange = 0f;  // 0 is default, should not register it
+
+    //knockback vars
+    public float knockbackForce = 10f;
+    public float knockbackDuration = 0.2f;
+    private float stopKnockback = 0f;
+    private Vector2 knockbackDirection;
 
 
 
@@ -26,14 +32,17 @@ public class enemyType1 : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         //set layer masks
-        wallLayer = LayerMask.GetMask("walls");
+        wallLayer = LayerMask.GetMask("walls", "enemies");
+        
+        //set enemy direction 
+        horizontalMovement = moveLeft ? -1 : 1;
     }
 
     // Update is called once per frame
     void Update()
     {
         //set movemnt
-        rb.linearVelocity = new Vector2(horizontalMovement * moveSpeed, rb.linearVelocity.y);
+        if(Time.time >= stopKnockback){rb.linearVelocity = new Vector2(horizontalMovement * moveSpeed, rb.linearVelocity.y);}
 
         //detect wall collision
         if(boxCollider.IsTouchingLayers(wallLayer) && horizontalMovement != 0 && Time.time >= nextChange) {
@@ -54,5 +63,20 @@ public class enemyType1 : MonoBehaviour
         }
 
 
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Check if the colliding object is tagged as an Enemy
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            // Calculate direction away from the enemy
+            Vector2 knockbackDirection = (transform.position - collision.transform.position).normalized;
+            // Apply instantaneous force
+            rb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
+
+            //delay movement change
+            stopKnockback = Time.time + knockbackDuration; //buffer to get off the wall
+        }
     }
 }
