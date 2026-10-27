@@ -18,9 +18,13 @@ public class enemyType1 : MonoBehaviour
 
     //knockback vars
     public float knockbackForce = 10f;
+    public float hitknockbackForce = 20f;
     public float knockbackDuration = 0.2f;
     private float stopKnockback = 0f;
     private Vector2 knockbackDirection;
+
+    //entity stats
+    private Entity stats;
 
 
 
@@ -30,9 +34,10 @@ public class enemyType1 : MonoBehaviour
         //grab other elements attached to this GO for use
         boxCollider = GetComponent<BoxCollider2D>();
         rb = GetComponent<Rigidbody2D>();
+        stats = GetComponent<Entity>();
 
         //set layer masks
-        wallLayer = LayerMask.GetMask("walls", "enemies");
+        wallLayer = LayerMask.GetMask("walls");
         
         //set enemy direction 
         horizontalMovement = moveLeft ? -1 : 1;
@@ -68,7 +73,7 @@ public class enemyType1 : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // Check if the colliding object is tagged as an Enemy
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("enemy"))
         {
             // Calculate direction away from the enemy
             Vector2 knockbackDirection = (transform.position - collision.transform.position).normalized;
@@ -76,7 +81,31 @@ public class enemyType1 : MonoBehaviour
             rb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
 
             //delay movement change
-            stopKnockback = Time.time + knockbackDuration; //buffer to get off the wall
+            stopKnockback = Time.time + knockbackDuration;
+
+            if(collision.gameObject.CompareTag("Player")){
+                collision.gameObject.GetComponent<Entity>().Damage(stats.Attack); //maybe update to be a seperate attack value for platformer later for balancing reasons
+                Debug.Log(collision.gameObject.GetComponent<Entity>().HP);
+            }else{
+                horizontalMovement = -horizontalMovement;
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D trigger)
+    {
+        // Check if the colliding object is tagged as an Enemy
+        if (trigger.gameObject.CompareTag("sword"))
+        {
+            // Calculate direction away from the enemy
+            Vector2 knockbackDirection = (transform.position - trigger.transform.position).normalized;
+            // Apply instantaneous force
+            rb.AddForce(knockbackDirection * hitknockbackForce, ForceMode2D.Impulse);
+
+            //delay movement change
+            stopKnockback = Time.time + knockbackDuration;
+            stats.Damage(trigger.gameObject.GetComponentInParent<Entity>().Attack);
+            Debug.Log(stats.HP);
         }
     }
 }

@@ -5,6 +5,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D rb;
     private BoxCollider2D boxCollider;
+    public SwordMechanics swordActions;
 
     public float moveSpeed = 10f;
 
@@ -34,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         if(Time.time >= stopKnockback){rb.linearVelocity = new Vector2(horizontalMovement * moveSpeed, rb.linearVelocity.y);}
+        swordActions.flipPosition(horizontalMovement);
     }
 
     public void Move(InputAction.CallbackContext context)
