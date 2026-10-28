@@ -5,6 +5,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D rb;
     private BoxCollider2D boxCollider;
+    public SwordMechanics swordActions;
 
     public float moveSpeed = 10f;
 
@@ -15,6 +16,12 @@ public class PlayerMovement : MonoBehaviour
     public int playerHealth = 3;
 
     public LayerMask groundlayer;
+
+    //knockback vars
+    public float knockbackForce = 10f;
+    public float knockbackDuration = 0.2f;
+    private float stopKnockback = 0f;
+    private Vector2 knockbackDirection;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -27,7 +34,8 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rb.linearVelocity = new Vector2(horizontalMovement * moveSpeed, rb.linearVelocity.y);
+        if(Time.time >= stopKnockback){rb.linearVelocity = new Vector2(horizontalMovement * moveSpeed, rb.linearVelocity.y);}
+        swordActions.flipPosition(horizontalMovement);
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -42,4 +50,20 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(Vector2.up * jumpSpeed, ForceMode2D.Impulse);
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Check if the colliding object is tagged as an Enemy
+        if (collision.gameObject.CompareTag("enemy"))
+        {
+            // Calculate direction away from the enemy
+            Vector2 knockbackDirection = (transform.position - collision.transform.position).normalized;
+            // Apply instantaneous force
+            rb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
+
+            //delay movement change
+            stopKnockback = Time.time + knockbackDuration; //buffer to get off the wall
+        }
+    }
+
 }
