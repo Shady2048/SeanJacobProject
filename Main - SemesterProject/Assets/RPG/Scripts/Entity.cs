@@ -11,20 +11,12 @@ public class Entity : MonoBehaviour
     public int SP = 10;
     public int Attack = 1;
     public int Defense = 0;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void Damage(int damage)
+    
+    // Returns true if entity has died (less than or equal to 0 HP), false otherwise.
+    public bool Damage(int damage)
     {
         HP -= damage - Defense;
+        return HP <= 0;
     }
 
     public void Heal(int recover)
@@ -34,6 +26,17 @@ public class Entity : MonoBehaviour
         {
             HP = MaxHP;
         }
+    }
+
+    // Returns true if the entity has enough SP to spend, false if it's unable to.
+    public bool SpendSP(int cost)
+    {
+        if (SP >= cost)
+        {
+            SP -= cost;
+            return true;
+        }
+        return false;
     }
 
 }

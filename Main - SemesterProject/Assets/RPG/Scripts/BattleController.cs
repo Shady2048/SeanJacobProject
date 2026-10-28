@@ -89,21 +89,6 @@ public class BattleController : MonoBehaviour
         }
     }
 
-    private void CreateEnemyHealthbars()
-    {
-        for(int i = 0; i < enemies.Count; i++)
-        {
-            GameObject newHeathbar = Instantiate(enemyHealthbarPrefab, enemyCanvas.transform);
-            newHeathbar.transform.SetParent(enemyCanvas.transform, false);
-            // Position the healthbar above the enemy's position
-            newHeathbar.transform.position = enemies[i].transform.position - new Vector3(0, 1, 0);
-
-            // Should just have healthbars be children of the enemies.
-
-            //enemyHealthbars[i] = newHeathbar;
-        }
-    }
-
     private void UpdateMenus()
     {
         // Update the HP and SP bars to be accurate to the player's current stats.
@@ -121,11 +106,8 @@ public class BattleController : MonoBehaviour
 
         for(int i = 0; i < enemies.Count; i++)
         {
-            //enemyHealthbars[i].GetComponent<Slider>().maxValue = enemies[i].GetComponent<Entity>().MaxHP;
-            //enemyHealthbars[i].GetComponent<Slider>().minValue = 0;
-            //enemyHealthbars[i].GetComponent<Slider>().value = enemies[i].GetComponent<Entity>().HP;
-            ////enemyHealthbars[i].transform.Find("HealthText").GetComponent<TextMeshProUGUI>().text = enemies[i].GetComponent<Entity>().HP + "/" + enemies[i].GetComponent<Entity>().MaxHP;
-            //Debug.Log(enemyHealthbars[i].transform.Find("HealthText").GetComponent<TextMeshProUGUI>().text);
+            enemies[i].GetComponent<EnemyHealthbarController>().UpdateHealthbar(enemies[i].GetComponent<Entity>().HP, enemies[i].GetComponent<Entity>().MaxHP);
+            
         }
     }
 
