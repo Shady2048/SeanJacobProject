@@ -32,13 +32,11 @@ public class BattleController : MonoBehaviour
 
     [Header("Enemy Canvas")]
     public Canvas enemyCanvas;
+    private List<GameObject> enemyHealthbars;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //HPPanel = canvas.transform.Find("HPPanel").GetComponent<Canvas>();
-        //SPPanel = canvas.transform.Find("SPPanel").GetComponent<Canvas>();
-
-
         state = BattleState.START;
         SetupBattle();
     }
@@ -46,15 +44,28 @@ public class BattleController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        switch (state)
+        {
+        case BattleState.ENEMYTURN:
+            enemyTurn();
+            break;
+        case BattleState.ENDWIN:
+            break;
+        case BattleState.ENDLOSE:
+            break;
+        case BattleState.ENDPREMATURE:
+            break;
+        }
     }
 
     void SetupBattle()
     {
         player.transform.position = playerPosition.position;
         SetupEnemyPositions();
-        CreateEnemyHealthbars();
+        //CreateEnemyHealthbars();
         UpdateMenus();
+
+        state = BattleState.PLAYERTURN;
     }
 
     // Sets up enemy positions based on the number of enemies in the battle. The enemy formations are set up in the
@@ -63,17 +74,17 @@ public class BattleController : MonoBehaviour
     {
         switch (enemies.Count) // Manually have to add enemy positions for each formation.
         {
-            case 1:
-                enemies[0].transform.position = enemyFormations[0].Find("Center").position;
+            case 1: // 1 enemy
+                enemies[0].transform.position = enemyFormations[enemies.Count - 1].Find("Center").position;
                 break;
-            case 2:
-                enemies[0].transform.position = enemyFormations[1].Find("Top").position;
-                enemies[1].transform.position = enemyFormations[1].Find("Bottom").position;
+            case 2: // 2 enemies
+                enemies[0].transform.position = enemyFormations[enemies.Count - 1].Find("Top").position;
+                enemies[1].transform.position = enemyFormations[enemies.Count - 1].Find("Bottom").position;
                 break;
             case 3:
-                enemies[0].transform.position = enemyFormations[0].Find("Top").position;
-                enemies[1].transform.position = enemyFormations[1].Find("Center").position;
-                enemies[2].transform.position = enemyFormations[2].Find("Bottom").position;
+                enemies[0].transform.position = enemyFormations[enemies.Count - 1].Find("Top").position;
+                enemies[1].transform.position = enemyFormations[enemies.Count - 1].Find("Center").position;
+                enemies[2].transform.position = enemyFormations[enemies.Count - 1].Find("Bottom").position;
                 break;
         }
     }
@@ -82,10 +93,14 @@ public class BattleController : MonoBehaviour
     {
         for(int i = 0; i < enemies.Count; i++)
         {
-            GameObject enemyHealthbar = Instantiate(enemyHealthbarPrefab, enemyCanvas.transform);
-            enemyHealthbar.transform.SetParent(enemyCanvas.transform, false);
+            GameObject newHeathbar = Instantiate(enemyHealthbarPrefab, enemyCanvas.transform);
+            newHeathbar.transform.SetParent(enemyCanvas.transform, false);
             // Position the healthbar above the enemy's position
-            enemyHealthbar.transform.position = enemies[i].transform.position - new Vector3(0, 1, 0);
+            newHeathbar.transform.position = enemies[i].transform.position - new Vector3(0, 1, 0);
+
+            // Should just have healthbars be children of the enemies.
+
+            //enemyHealthbars[i] = newHeathbar;
         }
     }
 
@@ -103,5 +118,58 @@ public class BattleController : MonoBehaviour
         // Update the HP and SP text as well
         HPText.text = player.GetComponent<Entity>().HP + "/" + player.GetComponent<Entity>().MaxHP;
         SPText.text = player.GetComponent<Entity>().SP + "/" + player.GetComponent<Entity>().MaxSP;
+
+        for(int i = 0; i < enemies.Count; i++)
+        {
+            //enemyHealthbars[i].GetComponent<Slider>().maxValue = enemies[i].GetComponent<Entity>().MaxHP;
+            //enemyHealthbars[i].GetComponent<Slider>().minValue = 0;
+            //enemyHealthbars[i].GetComponent<Slider>().value = enemies[i].GetComponent<Entity>().HP;
+            ////enemyHealthbars[i].transform.Find("HealthText").GetComponent<TextMeshProUGUI>().text = enemies[i].GetComponent<Entity>().HP + "/" + enemies[i].GetComponent<Entity>().MaxHP;
+            //Debug.Log(enemyHealthbars[i].transform.Find("HealthText").GetComponent<TextMeshProUGUI>().text);
+        }
+    }
+
+    public void onFightButtonClicked()
+    {
+        Debug.Log("Pressed Fight");
+        enemies[0].GetComponent<Entity>().Damage(player.GetComponent<Entity>().Attack + Random.Range(-2, 2));
+        Debug.Log("Enemy HP: " + enemies[0].GetComponent<Entity>().HP);
+        UpdateMenus();
+        state= BattleState.ENEMYTURN;
+    }
+    public void onSkillsButtonClicked()
+    {
+        Debug.Log("Pressed Skills");
+        if(player.GetComponent<Entity>().SP >= 3)
+        {
+            enemies[0].GetComponent<Entity>().Damage(player.GetComponent<Entity>().Attack * 2 + Random.Range(-2, 2));
+            player.GetComponent<Entity>().SP -= 3;
+            Debug.Log("Enemy HP: " + enemies[0].GetComponent<Entity>().HP);
+            UpdateMenus();
+            state = BattleState.ENEMYTURN;
+        }
+        else
+        {
+            Debug.Log("Not enough SP");
+        }
+
+    }
+    public void onItemsButtonClicked()
+    {
+        Debug.Log("Pressed Items");
+        player.GetComponent<Entity>().Heal(8);
+        UpdateMenus();
+        state = BattleState.ENEMYTURN;
+    }
+    public void onRunButtonClicked()
+    {
+        Debug.Log("Pressed Run");
+    }
+
+    void enemyTurn()
+    {
+        player.GetComponent<Entity>().Damage(enemies[0].GetComponent<Entity>().Attack + Random.Range(-2,2));
+        UpdateMenus();
+        state = BattleState.PLAYERTURN;
     }
 }

@@ -26,4 +26,14 @@ public class Entity : MonoBehaviour
     {
         HP -= damage - Defense;
     }
+
+    public void Heal(int recover)
+    {
+        HP += recover;
+        if(HP > MaxHP)
+        {
+            HP = MaxHP;
+        }
+    }
+
 }
