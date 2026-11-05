@@ -5,13 +5,13 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
-enum BattleState { START, PLAYERTURNSTART, PLAYERTURNCHOSEN, ENEMYTURNSTART, ENEMYTURN, ENDWIN, ENDLOSE, ENDPREMATURE };
+enum BattleState { START, PLAYERTURN_START, PLAYERTURN_ACTION, ENEMYTURN_START, ENEMYTURN_ACTION, ENDWIN, ENDLOSE, ENDPREMATURE };
 /*
 START: First State, used to set up the fight before player is allowed to take action.
-PLAYERTURNSTART: Player Starts turn.
-PLAYERTURNCHOSEN: Player has chosen an action, waiting for the action to finish.
-ENEMYTURNSTART: Enemy Starts turn.
-ENEMYTURN: Enemy attacks happen
+PLAYERTURN_START: Player Starts turn.
+PLAYERTURN_ACTION: Player has chosen an action, waiting for the action to finish.
+ENEMYTURN_START: Enemy Starts turn.
+ENEMYTURN_ACTION: Enemy attacks happen
 ENDWIN: Player has won the battle.
 ENDLOSE: Player has lost the battle.
 ENDPREMATURE: Player leaves battle by running, or Enemy has forced player out of battle.
@@ -29,7 +29,10 @@ public class BattleController : MonoBehaviour
     [Header("Enemy Formations")]
     public Transform[] enemyFormations;
 
-    
+    // UI
+
+    [Header("Action Menu")]
+    public GameObject actionMenu;
 
     [Header("HP Slider")]
     public Slider HPSlider;
@@ -58,17 +61,24 @@ public class BattleController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // enables / disables action menu:
+        if (state == BattleState.PLAYERTURN_START) actionMenu.SetActive(true);
+        else actionMenu.SetActive(false);
+
         switch (state)
         {
-        case BattleState.ENEMYTURNSTART:
-            enemyTurn();
-            break;
-        case BattleState.ENDWIN:
-            break;
-        case BattleState.ENDLOSE:
-            break;
-        case BattleState.ENDPREMATURE:
-            break;
+            case BattleState.PLAYERTURN_START:
+                battleUpdateText.text = "What will Player do?";       
+                break;
+            case BattleState.ENEMYTURN_START:
+                enemyTurn();
+                break;
+            case BattleState.ENDWIN:
+                break;
+            case BattleState.ENDLOSE:
+                break;
+            case BattleState.ENDPREMATURE:
+                break;
         }
     }
 
@@ -79,7 +89,7 @@ public class BattleController : MonoBehaviour
         //CreateEnemyHealthbars();
         UpdateMenus();
 
-        state = BattleState.PLAYERTURNSTART;
+        state = BattleState.PLAYERTURN_START;
     }
 
     // Sets up enemy positions based on the number of enemies in the battle. The enemy formations are set up in the
@@ -128,23 +138,29 @@ public class BattleController : MonoBehaviour
     public void onFightButtonClicked()
     {
         Debug.Log("Pressed Fight");
-        (int, bool) dmgResult = enemies[0].GetComponent<Entity>().Damage(player.GetComponent<Entity>().Attack + Random.Range(-2, 2));
+        (int dmg, bool isDead) dmgResult = enemies[0].GetComponent<Entity>().Damage(player.GetComponent<Entity>().Attack + Random.Range(-2, 2));
         //Debug.Log("Enemy HP: " + enemies[0].GetComponent<Entity>().HP);
         UpdateMenus();
-        state= BattleState.PLAYERTURNCHOSEN;
-        reportBattleUpdate(player.GetComponent<Entity>().name + " attacks " + enemies[0].GetComponent<Entity>().name + " for " + dmgResult.Item1 + " damage!", BattleState.ENEMYTURNSTART);
+        state= BattleState.PLAYERTURN_ACTION;
+        reportBattleUpdate(
+            player.GetComponent<Entity>().Name + " attacks " + enemies[0].GetComponent<Entity>().Name + " for " + dmgResult.dmg + " damage!", 
+            BattleState.ENEMYTURN_START
+            );
     }
     public void onSkillsButtonClicked()
     {
         Debug.Log("Pressed Skills");
         if(player.GetComponent<Entity>().SP >= 3)
         {
-            enemies[0].GetComponent<Entity>().Damage(player.GetComponent<Entity>().Attack * 2 + Random.Range(-2, 2));
+            (int dmg, bool isDead) dmgResult = enemies[0].GetComponent<Entity>().Damage(player.GetComponent<Entity>().Attack * 2 + Random.Range(-2, 2));
             player.GetComponent<Entity>().SP -= 3;
             Debug.Log("Enemy HP: " + enemies[0].GetComponent<Entity>().HP);
             UpdateMenus();
-            state = BattleState.PLAYERTURNCHOSEN;
-            reportBattleUpdate("Player attacks the enemy strongly!", BattleState.ENEMYTURNSTART);
+            state = BattleState.PLAYERTURN_ACTION;
+            reportBattleUpdate(
+                player.GetComponent<Entity>().Name + " strongly attacks " + enemies[0].GetComponent<Entity>().Name + " for " + dmgResult.dmg + " damage!", 
+                BattleState.ENEMYTURN_START
+                );
         }
         else
         {
@@ -154,10 +170,12 @@ public class BattleController : MonoBehaviour
     }
     public void onItemsButtonClicked()
     {
+        int heal = 8;
         Debug.Log("Pressed Items");
-        player.GetComponent<Entity>().Heal(8);
+        player.GetComponent<Entity>().Heal(heal);
+        reportBattleUpdate(player.GetComponent<Entity>().Name + " healed " + heal + " HP!", BattleState.ENEMYTURN_START);
         UpdateMenus();
-        state = BattleState.PLAYERTURNCHOSEN;
+        state = BattleState.PLAYERTURN_ACTION;
     }
     public void onRunButtonClicked()
     {
@@ -167,10 +185,13 @@ public class BattleController : MonoBehaviour
 
     void enemyTurn()
     {
-        player.GetComponent<Entity>().Damage(enemies[0].GetComponent<Entity>().Attack + Random.Range(-2,2));
+        (int dmg, bool isDead) dmgResult = player.GetComponent<Entity>().Damage(enemies[0].GetComponent<Entity>().Attack + Random.Range(-2,2));
         UpdateMenus();
-        state = BattleState.ENEMYTURN;
-        reportBattleUpdate("Enemy attacks the player!", BattleState.PLAYERTURNSTART);
+        state = BattleState.ENEMYTURN_ACTION;
+        reportBattleUpdate(
+            enemies[0].GetComponent<Entity>().Name + " attacks " + player.GetComponent<Entity>().Name + " for " + dmgResult.dmg + " damage!", 
+            BattleState.PLAYERTURN_START
+            );
     }
 
     void reportBattleUpdate(string update, BattleState nextState)
