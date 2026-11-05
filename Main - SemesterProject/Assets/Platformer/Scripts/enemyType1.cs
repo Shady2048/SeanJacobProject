@@ -4,6 +4,7 @@ public class enemyType1 : MonoBehaviour
 {
     public Rigidbody2D rb;
     private BoxCollider2D boxCollider;
+    private SpriteRenderer sr;
 
     public float moveSpeed = 5f;
     float horizontalMovement = 0; //positive - right, negative - left, 0 - not moving
@@ -35,6 +36,7 @@ public class enemyType1 : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         rb = GetComponent<Rigidbody2D>();
         stats = GetComponent<Entity>();
+        sr = GetComponent<SpriteRenderer>();
 
         //set layer masks
         wallLayer = LayerMask.GetMask("walls");
@@ -70,6 +72,10 @@ public class enemyType1 : MonoBehaviour
 
     }
 
+
+
+    //to control interactions with enemy (attacks)
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // Check if the colliding object is tagged as an Enemy
@@ -104,8 +110,14 @@ public class enemyType1 : MonoBehaviour
 
             //delay movement change
             stopKnockback = Time.time + knockbackDuration;
-            stats.Damage(trigger.gameObject.GetComponentInParent<Entity>().Attack);
-            Debug.Log(stats.HP);
         }
+    }
+
+
+    //kill enemy
+    public void killEnemy(){
+        sr.enabled = false;
+        rb.simulated = false;
+        boxCollider.enabled = false;
     }
 }
