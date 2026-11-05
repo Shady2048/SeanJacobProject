@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 // This is a list of stats used by both the players and enemies in the RPG sections
 public class Entity : MonoBehaviour
@@ -11,12 +12,13 @@ public class Entity : MonoBehaviour
     public int SP = 10;
     public int Attack = 1;
     public int Defense = 0;
-    
-    // Returns true if entity has died (less than or equal to 0 HP), false otherwise.
-    public bool Damage(int damage)
+
+    // returns the damage dealt to the entity and whether or not the entity has died from the damage.
+    public (int dmgDealt, bool hasDied) Damage(int damage)
     {
+        int currentHP = HP;
         HP -= damage - Defense;
-        return HP <= 0;
+        return (currentHP - HP, HP <= 0);
     }
 
     public void Heal(int recover)

@@ -3,8 +3,19 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
-enum BattleState { START, PLAYERTURN, ENEMYTURN, ENDWIN, ENDLOSE, ENDPREMATURE };
+enum BattleState { START, PLAYERTURNSTART, PLAYERTURNCHOSEN, ENEMYTURNSTART, ENEMYTURN, ENDWIN, ENDLOSE, ENDPREMATURE };
+/*
+START: First State, used to set up the fight before player is allowed to take action.
+PLAYERTURNSTART: Player Starts turn.
+PLAYERTURNCHOSEN: Player has chosen an action, waiting for the action to finish.
+ENEMYTURNSTART: Enemy Starts turn.
+ENEMYTURN: Enemy attacks happen
+ENDWIN: Player has won the battle.
+ENDLOSE: Player has lost the battle.
+ENDPREMATURE: Player leaves battle by running, or Enemy has forced player out of battle.
+*/
 public class BattleController : MonoBehaviour
 {
     BattleState state;
@@ -34,6 +45,9 @@ public class BattleController : MonoBehaviour
     public Canvas enemyCanvas;
     private List<GameObject> enemyHealthbars;
 
+    [Header("Battle Update Text")]
+    public TextMeshProUGUI battleUpdateText;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -46,7 +60,7 @@ public class BattleController : MonoBehaviour
     {
         switch (state)
         {
-        case BattleState.ENEMYTURN:
+        case BattleState.ENEMYTURNSTART:
             enemyTurn();
             break;
         case BattleState.ENDWIN:
@@ -65,7 +79,7 @@ public class BattleController : MonoBehaviour
         //CreateEnemyHealthbars();
         UpdateMenus();
 
-        state = BattleState.PLAYERTURN;
+        state = BattleState.PLAYERTURNSTART;
     }
 
     // Sets up enemy positions based on the number of enemies in the battle. The enemy formations are set up in the
@@ -114,10 +128,11 @@ public class BattleController : MonoBehaviour
     public void onFightButtonClicked()
     {
         Debug.Log("Pressed Fight");
-        enemies[0].GetComponent<Entity>().Damage(player.GetComponent<Entity>().Attack + Random.Range(-2, 2));
-        Debug.Log("Enemy HP: " + enemies[0].GetComponent<Entity>().HP);
+        (int, bool) dmgResult = enemies[0].GetComponent<Entity>().Damage(player.GetComponent<Entity>().Attack + Random.Range(-2, 2));
+        //Debug.Log("Enemy HP: " + enemies[0].GetComponent<Entity>().HP);
         UpdateMenus();
-        state= BattleState.ENEMYTURN;
+        state= BattleState.PLAYERTURNCHOSEN;
+        reportBattleUpdate(player.GetComponent<Entity>().name + " attacks " + enemies[0].GetComponent<Entity>().name + " for " + dmgResult.Item1 + " damage!", BattleState.ENEMYTURNSTART);
     }
     public void onSkillsButtonClicked()
     {
@@ -128,7 +143,8 @@ public class BattleController : MonoBehaviour
             player.GetComponent<Entity>().SP -= 3;
             Debug.Log("Enemy HP: " + enemies[0].GetComponent<Entity>().HP);
             UpdateMenus();
-            state = BattleState.ENEMYTURN;
+            state = BattleState.PLAYERTURNCHOSEN;
+            reportBattleUpdate("Player attacks the enemy strongly!", BattleState.ENEMYTURNSTART);
         }
         else
         {
@@ -141,17 +157,30 @@ public class BattleController : MonoBehaviour
         Debug.Log("Pressed Items");
         player.GetComponent<Entity>().Heal(8);
         UpdateMenus();
-        state = BattleState.ENEMYTURN;
+        state = BattleState.PLAYERTURNCHOSEN;
     }
     public void onRunButtonClicked()
     {
         Debug.Log("Pressed Run");
+        //state = BattleState.ENDPREMATURE;
     }
 
     void enemyTurn()
     {
         player.GetComponent<Entity>().Damage(enemies[0].GetComponent<Entity>().Attack + Random.Range(-2,2));
         UpdateMenus();
-        state = BattleState.PLAYERTURN;
+        state = BattleState.ENEMYTURN;
+        reportBattleUpdate("Enemy attacks the player!", BattleState.PLAYERTURNSTART);
+    }
+
+    void reportBattleUpdate(string update, BattleState nextState)
+    {
+        battleUpdateText.text = update;
+        StartCoroutine(reportBattleUpdateIENUM(nextState));
+    }
+    private IEnumerator reportBattleUpdateIENUM(BattleState nextState)
+    { 
+        yield return new WaitForSeconds(2f);
+        state = nextState;
     }
 }
