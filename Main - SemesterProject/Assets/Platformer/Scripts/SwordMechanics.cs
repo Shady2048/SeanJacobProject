@@ -31,9 +31,9 @@ public class SwordMechanics : MonoBehaviour
         // Check if the colliding object is tagged as an Enemy
         if (trigger.gameObject.CompareTag("enemy"))
         {
-            trigger.gameObject.GetComponent<Entity>().Damage(stats.Attack); //maybe update to be a seperate attack value for platformer later for balancing reasons
-            Debug.Log(trigger.gameObject.GetComponent<Entity>().HP);
-            if(trigger.gameObject.GetComponent<Entity>().HP <= 0){
+            trigger.gameObject.GetComponent<Entity>().Damage(stats.data.Attack); //maybe update to be a seperate attack value for platformer later for balancing reasons
+            Debug.Log(trigger.gameObject.GetComponent<Entity>().data.HP);
+            if(trigger.gameObject.GetComponent<Entity>().data.HP <= 0){
                 trigger.gameObject.GetComponent<enemyType1>().killEnemy(); //update later to be more of a general enemy script
             }
             

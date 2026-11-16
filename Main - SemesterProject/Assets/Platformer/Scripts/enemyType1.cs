@@ -17,7 +17,7 @@ public class enemyType1 : MonoBehaviour
     public float changeDelay = 2f; //time in seconds
     float nextChange = 0f;  // 0 is default, should not register it
 
-    //knockback vars
+    //knockback vars 
     public float knockbackForce = 10f;
     public float hitknockbackForce = 20f;
     public float knockbackDuration = 0.2f;
@@ -90,8 +90,8 @@ public class enemyType1 : MonoBehaviour
             stopKnockback = Time.time + knockbackDuration;
 
             if(collision.gameObject.CompareTag("Player")){
-                collision.gameObject.GetComponent<Entity>().Damage(stats.Attack); //maybe update to be a seperate attack value for platformer later for balancing reasons
-                Debug.Log(collision.gameObject.GetComponent<Entity>().HP);
+                collision.gameObject.GetComponent<Entity>().Damage(stats.data.Attack); //maybe update to be a seperate attack value for platformer later for balancing reasons
+                Debug.Log(collision.gameObject.GetComponent<Entity>().data.HP);
             }else{
                 horizontalMovement = -horizontalMovement;
             }

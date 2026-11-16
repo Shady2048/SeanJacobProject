@@ -7,13 +7,14 @@ public class PlayerMovement : MonoBehaviour
     private BoxCollider2D boxCollider;
     public SwordMechanics swordActions;
 
+    //entity stats
+    private Entity stats;
+
     public float moveSpeed = 10f;
 
     float horizontalMovement;
 
     public float jumpSpeed = 5f;
-
-    public int playerHealth = 3;
 
     public LayerMask groundlayer;
 
@@ -29,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
         //grab other elements attached to this GO for use
         boxCollider = GetComponent<BoxCollider2D>();
         rb = GetComponent<Rigidbody2D>();
+        stats = GetComponent<Entity>();
     }
 
     // Update is called once per frame
