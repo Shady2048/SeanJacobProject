@@ -5,7 +5,16 @@ using System.Collections.Generic;
 public class Entity : MonoBehaviour
 {
     [Header("Entity Data")]
-    public EntityDataSO data;
+    public EntityDataSO data = null;
+
+    public EntityDataSO template;// Start is called once before the first execution of Update after the MonoBehaviour is created
+    
+    void Start()
+    {
+        if(data == null){
+            data = saveState.instance.getEnemy(template.IDName, template);
+        }
+    }
 
     // returns the damage dealt to the entity and whether or not the entity has died from the damage.
     public (int dmgDealt, bool hasDied) Damage(int damage)

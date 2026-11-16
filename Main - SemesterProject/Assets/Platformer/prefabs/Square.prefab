@@ -189,6 +189,7 @@ MonoBehaviour:
     m_Bits: 0
   changeDelay: 2
   knockbackForce: 10
+  hitknockbackForce: 20
   knockbackDuration: 0.2
 --- !u!114 &1349886523551766544
 MonoBehaviour:
@@ -202,10 +203,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0889f54966ce7a4d895c482563acda4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Entity
-  Name: 
-  MaxHP: 10
-  HP: 10
-  MaxSP: 10
-  SP: 10
-  Attack: 1
-  Defense: 0
+  data: {fileID: 0}
+  template: {fileID: 11400000, guid: 266177c52ed59784080c62dd2c8e6f27, type: 2}
