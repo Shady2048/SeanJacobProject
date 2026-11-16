@@ -75,9 +75,10 @@ public class saveState : MonoBehaviour
 
     public List<EntityDataSO> getBattleEnemies(){
         List<EntityDataSO> endList;
+        endList = new List<EntityDataSO>{};
 
         for(int i = 0; i < enemies.Count; i++){
-            if(enemies[i].isInBattle){
+            if(enemies[i].stats.isInBattle){
                 endList.Add(enemies[i].stats);
             }
         }
