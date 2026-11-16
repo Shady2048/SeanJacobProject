@@ -14,7 +14,7 @@ public class Entity : MonoBehaviour
         if(data == null){
             data = saveState.instance.getEnemy(template.IDName, template);
         }
-    }
+    } 
 
     // returns the damage dealt to the entity and whether or not the entity has died from the damage.
     public (int dmgDealt, bool hasDied) Damage(int damage)

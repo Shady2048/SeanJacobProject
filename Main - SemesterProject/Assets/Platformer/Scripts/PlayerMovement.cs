@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement; // Required for scene switching
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -66,6 +67,13 @@ public class PlayerMovement : MonoBehaviour
             //delay movement change
             stopKnockback = Time.time + knockbackDuration; //buffer to get off the wall
         }
+    }
+
+
+    public void tryEnterBattle(){
+        if(saveState.instance.getBattleEnemies().Count == 0) return; //if no enemies are in battle state, return
+
+        SceneManager.LoadScene("RPGTest");
     }
 
 }
