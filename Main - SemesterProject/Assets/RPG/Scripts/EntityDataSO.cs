@@ -5,6 +5,7 @@ public class EntityDataSO : ScriptableObject
 {
     [Header("Entity Data")]
     public string Name;
+    public string IDName;
     public int MaxHP = 10;
     public int HP = 10;
     public int MaxSP = 10;
@@ -12,4 +13,5 @@ public class EntityDataSO : ScriptableObject
     public int Attack = 1;
     public int Defense = 0;
     public Vector3 lastPos;
+    public bool isInBattle = false;
 }

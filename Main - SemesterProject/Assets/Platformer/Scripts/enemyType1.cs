@@ -111,7 +111,23 @@ public class enemyType1 : MonoBehaviour
             //delay movement change
             stopKnockback = Time.time + knockbackDuration;
         }
+
+        // Check if the colliding object is tagged as battleZone
+        if (trigger.gameObject.CompareTag("battleZone"))
+        {
+            stats.data.isInBattle = true;
+        }
     }
+
+
+    private void OnTriggerExit2D(Collider2D trigger){
+        // Check if the colliding object is tagged as battleZone
+        if (trigger.gameObject.CompareTag("battleZone"))
+        {
+            stats.data.isInBattle = false;
+        }
+    }
+
 
 
     //kill enemy
