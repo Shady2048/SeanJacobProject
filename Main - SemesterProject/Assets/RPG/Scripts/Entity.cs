@@ -5,37 +5,31 @@ using System.Collections.Generic;
 public class Entity : MonoBehaviour
 {
     [Header("Entity Data")]
-    public string Name;
-    public int MaxHP = 10;
-    public int HP = 10;
-    public int MaxSP = 10;
-    public int SP = 10;
-    public int Attack = 1;
-    public int Defense = 0;
+    public EntityDataSO data;
 
     // returns the damage dealt to the entity and whether or not the entity has died from the damage.
     public (int dmgDealt, bool hasDied) Damage(int damage)
     {
-        int currentHP = HP;
-        HP -= damage - Defense;
-        return (currentHP - HP, HP <= 0);
+        int currentHP = data.HP;
+        data.HP -= damage - data.Defense;
+        return (currentHP - data.HP, data.HP <= 0);
     }
 
     public void Heal(int recover)
     {
-        HP += recover;
-        if(HP > MaxHP)
+        data.HP += recover;
+        if(data.HP > data.MaxHP)
         {
-            HP = MaxHP;
+            data.HP = data.MaxHP;
         }
     }
 
     // Returns true if the entity has enough SP to spend, false if it's unable to.
     public bool SpendSP(int cost)
     {
-        if (SP >= cost)
+        if (data.SP >= cost)
         {
-            SP -= cost;
+            data.SP -= cost;
             return true;
         }
         return false;

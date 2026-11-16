@@ -124,21 +124,21 @@ public class BattleController : MonoBehaviour
     private void UpdateMenus()
     {
         // Update the HP and SP bars to be accurate to the player's current stats.
-        HPSlider.maxValue = player.GetComponent<Entity>().MaxHP;
+        HPSlider.maxValue = player.GetComponent<Entity>().data.MaxHP;
         HPSlider.minValue = 0;
-        HPSlider.value = player.GetComponent<Entity>().HP;
+        HPSlider.value = player.GetComponent<Entity>().data.HP;
 
-        SPSlider.maxValue = player.GetComponent<Entity>().MaxSP;
+        SPSlider.maxValue = player.GetComponent<Entity>().data.MaxSP;
         SPSlider.minValue = 0;
-        SPSlider.value = player.GetComponent<Entity>().SP;
+        SPSlider.value = player.GetComponent<Entity>().data.SP;
 
         // Update the HP and SP text as well
-        HPText.text = player.GetComponent<Entity>().HP + "/" + player.GetComponent<Entity>().MaxHP;
-        SPText.text = player.GetComponent<Entity>().SP + "/" + player.GetComponent<Entity>().MaxSP;
+        HPText.text = player.GetComponent<Entity>().data.HP + "/" + player.GetComponent<Entity>().data.MaxHP;
+        SPText.text = player.GetComponent<Entity>().data.SP + "/" + player.GetComponent<Entity>().data.MaxSP;
 
         for(int i = 0; i < enemies.Count; i++)
         {
-            enemies[i].GetComponent<EnemyHealthbarController>().UpdateHealthbar(enemies[i].GetComponent<Entity>().HP, enemies[i].GetComponent<Entity>().MaxHP);
+            enemies[i].GetComponent<EnemyHealthbarController>().UpdateHealthbar(enemies[i].GetComponent<Entity>().data.HP, enemies[i].GetComponent<Entity>().data.MaxHP);
             
         }
     }
@@ -150,27 +150,27 @@ public class BattleController : MonoBehaviour
         //state = BattleState.PLAYERTURN_SELECT;
 
 
-        (int dmg, bool isDead) dmgResult = enemies[0].GetComponent<Entity>().Damage(player.GetComponent<Entity>().Attack + Random.Range(-2, 2));
+        (int dmg, bool isDead) dmgResult = enemies[0].GetComponent<Entity>().Damage(player.GetComponent<Entity>().data.Attack + Random.Range(-2, 2));
         //Debug.Log("Enemy HP: " + enemies[0].GetComponent<Entity>().HP);
         UpdateMenus();
         state= BattleState.PLAYERTURN_ACTION;
         reportBattleUpdate(
-            player.GetComponent<Entity>().Name + " attacks " + enemies[0].GetComponent<Entity>().Name + " for " + dmgResult.dmg + " damage!", 
+            player.GetComponent<Entity>().data.Name + " attacks " + enemies[0].GetComponent<Entity>().data.Name + " for " + dmgResult.dmg + " damage!", 
             BattleState.ENEMYTURN_START
             );
     }
     public void onSkillsButtonClicked()
     {
         Debug.Log("Pressed Skills");
-        if(player.GetComponent<Entity>().SP >= 3)
+        if(player.GetComponent<Entity>().data.SP >= 3)
         {
-            (int dmg, bool isDead) dmgResult = enemies[0].GetComponent<Entity>().Damage(player.GetComponent<Entity>().Attack * 2 + Random.Range(-2, 2));
-            player.GetComponent<Entity>().SP -= 3;
-            Debug.Log("Enemy HP: " + enemies[0].GetComponent<Entity>().HP);
+            (int dmg, bool isDead) dmgResult = enemies[0].GetComponent<Entity>().Damage(player.GetComponent<Entity>().data.Attack * 2 + Random.Range(-2, 2));
+            player.GetComponent<Entity>().data.SP -= 3;
+            Debug.Log("Enemy HP: " + enemies[0].GetComponent<Entity>().data.HP);
             UpdateMenus();
             state = BattleState.PLAYERTURN_ACTION;
             reportBattleUpdate(
-                player.GetComponent<Entity>().Name + " strongly attacks " + enemies[0].GetComponent<Entity>().Name + " for " + dmgResult.dmg + " damage!", 
+                player.GetComponent<Entity>().data.Name + " strongly attacks " + enemies[0].GetComponent<Entity>().data.Name + " for " + dmgResult.dmg + " damage!", 
                 BattleState.ENEMYTURN_START
                 );
         }
@@ -185,7 +185,7 @@ public class BattleController : MonoBehaviour
         int heal = 8;
         Debug.Log("Pressed Items");
         player.GetComponent<Entity>().Heal(heal);
-        reportBattleUpdate(player.GetComponent<Entity>().Name + " healed " + heal + " HP!", BattleState.ENEMYTURN_START);
+        reportBattleUpdate(player.GetComponent<Entity>().data.Name + " healed " + heal + " HP!", BattleState.ENEMYTURN_START);
         UpdateMenus();
         state = BattleState.PLAYERTURN_ACTION;
     }
@@ -197,11 +197,11 @@ public class BattleController : MonoBehaviour
 
     void enemyTurn()
     {
-        (int dmg, bool isDead) dmgResult = player.GetComponent<Entity>().Damage(enemies[0].GetComponent<Entity>().Attack + Random.Range(-2,2));
+        (int dmg, bool isDead) dmgResult = player.GetComponent<Entity>().Damage(enemies[0].GetComponent<Entity>().data.Attack + Random.Range(-2,2));
         UpdateMenus();
         state = BattleState.ENEMYTURN_ACTION;
         reportBattleUpdate(
-            enemies[0].GetComponent<Entity>().Name + " attacks " + player.GetComponent<Entity>().Name + " for " + dmgResult.dmg + " damage!", 
+            enemies[0].GetComponent<Entity>().data.Name + " attacks " + player.GetComponent<Entity>().data.Name + " for " + dmgResult.dmg + " damage!", 
             BattleState.PLAYERTURN_START
             );
     }
