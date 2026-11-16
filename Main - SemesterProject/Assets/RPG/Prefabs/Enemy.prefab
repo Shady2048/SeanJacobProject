@@ -210,13 +210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0889f54966ce7a4d895c482563acda4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Entity
-  Name: Slime
-  MaxHP: 20
-  HP: 20
-  MaxSP: 10
-  SP: 10
-  Attack: 3
-  Defense: 0
+  data: {fileID: 0}
 --- !u!114 &7176177101796431638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -281,11 +275,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 643847630433980768, guid: 81aa4d9b9f524cd488abebb893fb79c8, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1053.6638
+      value: 1354
       objectReference: {fileID: 0}
     - target: {fileID: 643847630433980768, guid: 81aa4d9b9f524cd488abebb893fb79c8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 564.8445
+      value: 96
+      objectReference: {fileID: 0}
+    - target: {fileID: 1506777665841244931, guid: 81aa4d9b9f524cd488abebb893fb79c8, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.000030517578
       objectReference: {fileID: 0}
     - target: {fileID: 1770072987811781647, guid: 81aa4d9b9f524cd488abebb893fb79c8, type: 3}
       propertyPath: m_Pivot.x
@@ -317,7 +315,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1770072987811781647, guid: 81aa4d9b9f524cd488abebb893fb79c8, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 51.93
+      value: 51.929993
       objectReference: {fileID: 0}
     - target: {fileID: 1770072987811781647, guid: 81aa4d9b9f524cd488abebb893fb79c8, type: 3}
       propertyPath: m_LocalScale.x
@@ -365,7 +363,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1770072987811781647, guid: 81aa4d9b9f524cd488abebb893fb79c8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 71.65
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 1770072987811781647, guid: 81aa4d9b9f524cd488abebb893fb79c8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -391,8 +389,13 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7132844771106130985, guid: 81aa4d9b9f524cd488abebb893fb79c8, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5899519870774129030, guid: 81aa4d9b9f524cd488abebb893fb79c8, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81aa4d9b9f524cd488abebb893fb79c8, type: 3}

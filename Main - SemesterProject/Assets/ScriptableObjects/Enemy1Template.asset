@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Enemy1Template
   m_EditorClassIdentifier: Assembly-CSharp::EntityDataSO
   Name: Enemy1
-  MaxHP: 50
-  HP: 50
+  MaxHP: 15
+  HP: 15
   MaxSP: 10
   SP: 10
-  Attack: 5
+  Attack: 3
   Defense: 0
   lastPos: {x: 0, y: 0, z: 0}

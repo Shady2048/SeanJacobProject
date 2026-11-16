@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using UnityEngine.InputSystem;
 
 enum BattleState { START, PLAYERTURN_START, PLAYERTURN_SELECT, PLAYERTURN_ACTION, ENEMYTURN_START, ENEMYTURN_ACTION, ENDWIN, ENDLOSE, ENDPREMATURE };
 /*
@@ -37,6 +38,8 @@ public class BattleController : MonoBehaviour
 
     [Header("Selection Indicator")]
     public GameObject selectionIndicator;   // Triangle for now
+
+    private int selectedEnemyIndex = 0; // Index of the currently selected enemy in the enemies list.
 
     [Header("HP Slider")]
     public Slider HPSlider;
@@ -77,6 +80,12 @@ public class BattleController : MonoBehaviour
         {
             case BattleState.PLAYERTURN_START:
                 battleUpdateText.text = "What will Player do?";       
+                break;
+
+            case BattleState.PLAYERTURN_SELECT:
+                selectionIndicator.transform.position = enemies[selectedEnemyIndex].transform.position + new Vector3(-2, 0, 0);
+
+                
                 break;
             case BattleState.ENEMYTURN_START:
                 enemyTurn();
@@ -143,21 +152,74 @@ public class BattleController : MonoBehaviour
         }
     }
 
+    public void navigateSelection(InputAction.CallbackContext context)
+    {
+        if (context.started && state == BattleState.PLAYERTURN_SELECT)
+        {
+            Vector2 input = context.ReadValue<Vector2>();
+            if (input.y > 0) // Up
+            {
+                Debug.Log("Pressed Up");
+                selectedEnemyIndex--;
+                if (selectedEnemyIndex < 0) selectedEnemyIndex = enemies.Count - 1;
+            }
+            else if (input.y < 0) // Down
+            {
+                Debug.Log("Pressed Down");
+                selectedEnemyIndex++;
+                if (selectedEnemyIndex >= enemies.Count) selectedEnemyIndex = 0;
+            }
+            Debug.Log("Selected Enemy Index: " + selectedEnemyIndex + " inputContext: " + input);
+        }
+        Debug.Log("here");
+    }
+
+    public void onUpPressed(InputAction.CallbackContext context)
+    {
+        if(context.started && state == BattleState.PLAYERTURN_SELECT)
+        {
+            selectedEnemyIndex--;
+            if (selectedEnemyIndex < 0) selectedEnemyIndex = enemies.Count - 1;
+        }   
+        if (context.started && state == BattleState.PLAYERTURN_SELECT)
+        {
+            selectedEnemyIndex--;
+            if (selectedEnemyIndex < 0) selectedEnemyIndex = enemies.Count - 1;
+        }
+    }
+
+    public void onDownPressed(InputAction.CallbackContext context)
+    {
+        if (context.started && state == BattleState.PLAYERTURN_SELECT)
+        {
+            selectedEnemyIndex++;
+            if (selectedEnemyIndex >= enemies.Count) selectedEnemyIndex = 0;
+        }
+    }
+
+    public void onCancelPressed(InputAction.CallbackContext context)
+    {
+        if (context.started && state == BattleState.PLAYERTURN_SELECT)
+        {
+            state = BattleState.PLAYERTURN_START;
+        }
+    }
+
     public void onFightButtonClicked()
     {
         Debug.Log("Pressed Fight");
 
-        //state = BattleState.PLAYERTURN_SELECT;
+        state = BattleState.PLAYERTURN_SELECT;
 
 
-        (int dmg, bool isDead) dmgResult = enemies[0].GetComponent<Entity>().Damage(player.GetComponent<Entity>().data.Attack + Random.Range(-2, 2));
-        //Debug.Log("Enemy HP: " + enemies[0].GetComponent<Entity>().HP);
-        UpdateMenus();
-        state= BattleState.PLAYERTURN_ACTION;
-        reportBattleUpdate(
-            player.GetComponent<Entity>().data.Name + " attacks " + enemies[0].GetComponent<Entity>().data.Name + " for " + dmgResult.dmg + " damage!", 
-            BattleState.ENEMYTURN_START
-            );
+        //(int dmg, bool isDead) dmgResult = enemies[0].GetComponent<Entity>().Damage(player.GetComponent<Entity>().data.Attack + Random.Range(-2, 2));
+        ////Debug.Log("Enemy HP: " + enemies[0].GetComponent<Entity>().HP);
+        //UpdateMenus();
+        //state= BattleState.PLAYERTURN_ACTION;
+        //reportBattleUpdate(
+        //    player.GetComponent<Entity>().data.Name + " attacks " + enemies[0].GetComponent<Entity>().data.Name + " for " + dmgResult.dmg + " damage!", 
+        //    BattleState.ENEMYTURN_START
+        //    );
     }
     public void onSkillsButtonClicked()
     {
