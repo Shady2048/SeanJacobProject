@@ -5,10 +5,11 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
-enum BattleState { START, PLAYERTURN_START, PLAYERTURN_ACTION, ENEMYTURN_START, ENEMYTURN_ACTION, ENDWIN, ENDLOSE, ENDPREMATURE };
+enum BattleState { START, PLAYERTURN_START, PLAYERTURN_SELECT, PLAYERTURN_ACTION, ENEMYTURN_START, ENEMYTURN_ACTION, ENDWIN, ENDLOSE, ENDPREMATURE };
 /*
 START: First State, used to set up the fight before player is allowed to take action.
 PLAYERTURN_START: Player Starts turn.
+PLAYERTURN_SELECT: Player is selecting a target
 PLAYERTURN_ACTION: Player has chosen an action, waiting for the action to finish.
 ENEMYTURN_START: Enemy Starts turn.
 ENEMYTURN_ACTION: Enemy attacks happen
@@ -33,6 +34,9 @@ public class BattleController : MonoBehaviour
 
     [Header("Action Menu")]
     public GameObject actionMenu;
+
+    [Header("Selection Indicator")]
+    public GameObject selectionIndicator;   // Triangle for now
 
     [Header("HP Slider")]
     public Slider HPSlider;
@@ -64,6 +68,10 @@ public class BattleController : MonoBehaviour
         // enables / disables action menu:
         if (state == BattleState.PLAYERTURN_START) actionMenu.SetActive(true);
         else actionMenu.SetActive(false);
+
+        // shows/hides selection triangle
+        if (state == BattleState.PLAYERTURN_SELECT) selectionIndicator.SetActive(true);
+        else selectionIndicator.SetActive(false);
 
         switch (state)
         {
@@ -138,6 +146,10 @@ public class BattleController : MonoBehaviour
     public void onFightButtonClicked()
     {
         Debug.Log("Pressed Fight");
+
+        //state = BattleState.PLAYERTURN_SELECT;
+
+
         (int dmg, bool isDead) dmgResult = enemies[0].GetComponent<Entity>().Damage(player.GetComponent<Entity>().Attack + Random.Range(-2, 2));
         //Debug.Log("Enemy HP: " + enemies[0].GetComponent<Entity>().HP);
         UpdateMenus();
