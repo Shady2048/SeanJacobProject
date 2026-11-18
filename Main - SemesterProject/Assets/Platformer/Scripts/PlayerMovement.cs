@@ -35,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
 
         //enable player controls
         saveState.controls.Player.Enable();
+        saveState.leaving = false;
     }
 
     // Update is called once per frame
@@ -88,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
             entity.savePos();
         }
 
-        
+        saveState.leaving = true;
         saveState.controls.Player.Disable();
         SceneManager.LoadScene("RPGTest");
     }

@@ -21,6 +21,7 @@ public class saveState : MonoBehaviour
     public List<myPair> enemies;
 
     public static bool returning = false;
+    public static bool leaving = false;
     public static PlayerControls controls;
 
 

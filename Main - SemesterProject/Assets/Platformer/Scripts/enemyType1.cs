@@ -124,7 +124,7 @@ public class enemyType1 : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D trigger){
         // Check if the colliding object is tagged as battleZone
-        if (trigger.gameObject.CompareTag("battleZone"))
+        if (trigger.gameObject.CompareTag("battleZone") && !saveState.leaving)
         {
             stats.data.isInBattle = false;
         }
