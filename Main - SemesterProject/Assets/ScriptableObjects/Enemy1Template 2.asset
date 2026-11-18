@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 133d7df9d401a4846aabdec81457dba3, type: 3}
   m_Name: Enemy1Template 2
   m_EditorClassIdentifier: Assembly-CSharp::EntityDataSO
-  Name: Enemy1
+  Name: Enemy1.2
   IDName: Enemy1
-  MaxHP: 15
-  HP: 15
-  MaxSP: 10
-  SP: 10
-  Attack: 3
+  MaxHP: 30
+  HP: 30
+  MaxSP: 5
+  SP: 5
+  Attack: 4
   Defense: 0
   lastPos: {x: 0, y: 0, z: 0}
   isInBattle: 0
