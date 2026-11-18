@@ -14,7 +14,11 @@ public class Entity : MonoBehaviour
         if(data == null){
             data = saveState.instance.getEnemy(template.IDName, template);
         }
-    } 
+
+        if(saveState.returning){
+            transform.position = data.lastPos;
+        }
+    }  
 
     // returns the damage dealt to the entity and whether or not the entity has died from the damage.
     public (int dmgDealt, bool hasDied) Damage(int damage)
@@ -44,4 +48,7 @@ public class Entity : MonoBehaviour
         return false;
     }
 
+    public void savePos(){
+        data.lastPos = transform.position;
+    }
 }

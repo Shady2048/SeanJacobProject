@@ -73,6 +73,13 @@ public class PlayerMovement : MonoBehaviour
     public void tryEnterBattle(){
         if(saveState.instance.getBattleEnemies().Count == 0) return; //if no enemies are in battle state, return
 
+        //save all entity positions at this time
+        Entity[] allEntities = FindObjectsByType<Entity>();
+
+        foreach(Entity entity in allEntities){
+            entity.savePos();
+        }
+
         SceneManager.LoadScene("RPGTest");
     }
 

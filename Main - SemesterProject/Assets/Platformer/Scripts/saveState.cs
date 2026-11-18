@@ -20,7 +20,7 @@ public class saveState : MonoBehaviour
 
     public List<myPair> enemies;
 
-    public bool returning = false;
+    public static bool returning = false;
 
 
     void Awake()
