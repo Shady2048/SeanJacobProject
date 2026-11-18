@@ -1204,6 +1204,26 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""initialStateCheck"": false,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""Select"",
+                    ""type"": ""Button"",
+                    ""id"": ""fad1f83c-4f73-44a4-a34e-65f3e956577c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""Return"",
+                    ""type"": ""Button"",
+                    ""id"": ""215d3838-4a86-4ac7-a446-6e2c335887a9"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -1248,6 +1268,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Down"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b082685c-b6ad-4829-a4d0-ebedbaf6559a"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""20730bd5-dc81-48ab-9cea-212a34c9e656"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Return"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1347,6 +1389,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_RPG_UI = asset.FindActionMap("RPG_UI", throwIfNotFound: true);
         m_RPG_UI_Up = m_RPG_UI.FindAction("Up", throwIfNotFound: true);
         m_RPG_UI_Down = m_RPG_UI.FindAction("Down", throwIfNotFound: true);
+        m_RPG_UI_Select = m_RPG_UI.FindAction("Select", throwIfNotFound: true);
+        m_RPG_UI_Return = m_RPG_UI.FindAction("Return", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -1907,6 +1951,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private List<IRPG_UIActions> m_RPG_UIActionsCallbackInterfaces = new List<IRPG_UIActions>();
     private readonly InputAction m_RPG_UI_Up;
     private readonly InputAction m_RPG_UI_Down;
+    private readonly InputAction m_RPG_UI_Select;
+    private readonly InputAction m_RPG_UI_Return;
     /// <summary>
     /// Provides access to input actions defined in input action map "RPG_UI".
     /// </summary>
@@ -1926,6 +1972,14 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "RPG_UI/Down".
         /// </summary>
         public InputAction @Down => m_Wrapper.m_RPG_UI_Down;
+        /// <summary>
+        /// Provides access to the underlying input action "RPG_UI/Select".
+        /// </summary>
+        public InputAction @Select => m_Wrapper.m_RPG_UI_Select;
+        /// <summary>
+        /// Provides access to the underlying input action "RPG_UI/Return".
+        /// </summary>
+        public InputAction @Return => m_Wrapper.m_RPG_UI_Return;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1958,6 +2012,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Down.started += instance.OnDown;
             @Down.performed += instance.OnDown;
             @Down.canceled += instance.OnDown;
+            @Select.started += instance.OnSelect;
+            @Select.performed += instance.OnSelect;
+            @Select.canceled += instance.OnSelect;
+            @Return.started += instance.OnReturn;
+            @Return.performed += instance.OnReturn;
+            @Return.canceled += instance.OnReturn;
         }
 
         /// <summary>
@@ -1975,6 +2035,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Down.started -= instance.OnDown;
             @Down.performed -= instance.OnDown;
             @Down.canceled -= instance.OnDown;
+            @Select.started -= instance.OnSelect;
+            @Select.performed -= instance.OnSelect;
+            @Select.canceled -= instance.OnSelect;
+            @Return.started -= instance.OnReturn;
+            @Return.performed -= instance.OnReturn;
+            @Return.canceled -= instance.OnReturn;
         }
 
         /// <summary>
@@ -2258,5 +2324,19 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnDown(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Select" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSelect(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Return" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnReturn(InputAction.CallbackContext context);
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 enum BattleState { START, PLAYERTURN_START, PLAYERTURN_SELECT, PLAYERTURN_ACTION, ENEMYTURN_START, ENEMYTURN_ACTION, ENDWIN, ENDLOSE, ENDPREMATURE };
 /*
@@ -58,6 +59,8 @@ public class BattleController : MonoBehaviour
     [Header("Battle Update Text")]
     public TextMeshProUGUI battleUpdateText;
 
+    private bool playerActionTaken = false; //just used to make sure the player action function only is called once.
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -98,14 +101,47 @@ public class BattleController : MonoBehaviour
                         selectedEnemyIndex++;
                         if (selectedEnemyIndex >= enemies.Count) selectedEnemyIndex = 0;
                     }
+                    if (saveState.controls.RPG_UI.Select.WasPressedThisFrame())
+                    {
+                        state = BattleState.PLAYERTURN_ACTION;
+                        playerActionTaken = false; // Reset the player action taken flag for the next turn.
 
+                        Debug.Log("Selected Enemy: " + enemies[selectedEnemyIndex].GetComponent<Entity>().data.Name);
                     }
+                    if(saveState.controls.RPG_UI.Return.WasPressedThisFrame())
+                    {
+                        state = BattleState.PLAYERTURN_START;
+                    }
+
+                }
                 
                 break;
+            case BattleState.PLAYERTURN_ACTION:
+                if(!playerActionTaken)
+                {
+                    playerAction();
+                    playerActionTaken = true;
+                }
+                break;
             case BattleState.ENEMYTURN_START:
-                enemyTurn();
+                if (areAllEnemiesDead())
+                {
+                    reportBattleUpdate(
+                        "You won! :)",
+                        BattleState.ENDWIN
+                    );
+
+                }
+                else
+                {
+                    enemyTurn();
+                }
                 break;
             case BattleState.ENDWIN:
+                saveState.controls.RPG_UI.Disable();
+
+                SceneManager.LoadScene("Platformer");
+
                 break;
             case BattleState.ENDLOSE:
                 break;
@@ -167,69 +203,11 @@ public class BattleController : MonoBehaviour
         }
     }
 
-    public void navigateSelection(InputAction.CallbackContext context)
-    {
-        if (context.started && state == BattleState.PLAYERTURN_SELECT)
-        {
-            Vector2 input = context.ReadValue<Vector2>();
-            if (input.y > 0) // Up
-            {
-                Debug.Log("Pressed Up");
-                selectedEnemyIndex--;
-                if (selectedEnemyIndex < 0) selectedEnemyIndex = enemies.Count - 1;
-            }
-            else if (input.y < 0) // Down
-            {
-                Debug.Log("Pressed Down");
-                selectedEnemyIndex++;
-                if (selectedEnemyIndex >= enemies.Count) selectedEnemyIndex = 0;
-            }
-            Debug.Log("Selected Enemy Index: " + selectedEnemyIndex + " inputContext: " + input);
-        }
-        Debug.Log("here");
-    }
-
-    public void onUpPressed(InputAction.CallbackContext context)
-    {
-        if(context.started && state == BattleState.PLAYERTURN_SELECT)
-        {
-            selectedEnemyIndex--;
-            if (selectedEnemyIndex < 0) selectedEnemyIndex = enemies.Count - 1;
-        }   
-    }
-
-    public void onDownPressed(InputAction.CallbackContext context)
-    {
-        if (context.started && state == BattleState.PLAYERTURN_SELECT)
-        {
-            selectedEnemyIndex++;
-            if (selectedEnemyIndex >= enemies.Count) selectedEnemyIndex = 0;
-        }
-    }
-
-    public void onCancelPressed(InputAction.CallbackContext context)
-    {
-        if (context.started && state == BattleState.PLAYERTURN_SELECT)
-        {
-            state = BattleState.PLAYERTURN_START;
-        }
-    }
-
     public void onFightButtonClicked()
     {
         Debug.Log("Pressed Fight");
 
         state = BattleState.PLAYERTURN_SELECT;
-
-
-        //(int dmg, bool isDead) dmgResult = enemies[0].GetComponent<Entity>().Damage(player.GetComponent<Entity>().data.Attack + Random.Range(-2, 2));
-        ////Debug.Log("Enemy HP: " + enemies[0].GetComponent<Entity>().HP);
-        //UpdateMenus();
-        //state= BattleState.PLAYERTURN_ACTION;
-        //reportBattleUpdate(
-        //    player.GetComponent<Entity>().data.Name + " attacks " + enemies[0].GetComponent<Entity>().data.Name + " for " + dmgResult.dmg + " damage!", 
-        //    BattleState.ENEMYTURN_START
-        //    );
     }
     public void onSkillsButtonClicked()
     {
@@ -267,6 +245,18 @@ public class BattleController : MonoBehaviour
         //state = BattleState.ENDPREMATURE;
     }
 
+    void playerAction()
+    {
+        (int dmg, bool isDead) dmgResult = enemies[selectedEnemyIndex].GetComponent<Entity>().Damage(player.GetComponent<Entity>().data.Attack + Random.Range(-2, 2));
+        Debug.Log("Enemy HP: " + enemies[selectedEnemyIndex].GetComponent<Entity>().data.HP);
+        UpdateMenus();
+        state = BattleState.PLAYERTURN_ACTION;
+        reportBattleUpdate(
+            player.GetComponent<Entity>().data.Name + " attacks " + enemies[selectedEnemyIndex].GetComponent<Entity>().data.Name + " for " + dmgResult.dmg + " damage!",
+            BattleState.ENEMYTURN_START
+            );
+    }
+
     void enemyTurn()
     {
         (int dmg, bool isDead) dmgResult = player.GetComponent<Entity>().Damage(enemies[0].GetComponent<Entity>().data.Attack + Random.Range(-2,2));
@@ -276,6 +266,18 @@ public class BattleController : MonoBehaviour
             enemies[0].GetComponent<Entity>().data.Name + " attacks " + player.GetComponent<Entity>().data.Name + " for " + dmgResult.dmg + " damage!", 
             BattleState.PLAYERTURN_START
             );
+    }
+
+    bool areAllEnemiesDead()
+    {
+        foreach (GameObject enemy in enemies)
+        {
+            if (enemy.GetComponent<Entity>().data.HP > 0)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     void reportBattleUpdate(string update, BattleState nextState)
