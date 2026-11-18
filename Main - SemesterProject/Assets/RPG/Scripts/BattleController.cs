@@ -153,6 +153,9 @@ public class BattleController : MonoBehaviour
             case BattleState.ENDLOSE:
                 break;
             case BattleState.ENDPREMATURE:
+                saveState.controls.RPG_UI.Disable();
+
+                SceneManager.LoadScene("Platformer");
                 break;
         }
     }
@@ -249,7 +252,7 @@ public class BattleController : MonoBehaviour
     public void onRunButtonClicked()
     {
         Debug.Log("Pressed Run");
-        //state = BattleState.ENDPREMATURE;
+        state = BattleState.ENDPREMATURE;
     }
 
     void playerAction()
