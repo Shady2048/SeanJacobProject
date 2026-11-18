@@ -43,6 +43,9 @@ public class enemyType1 : MonoBehaviour
         
         //set enemy direction 
         horizontalMovement = moveLeft ? -1 : 1;
+
+        //if enemy dead upon return, kill it
+        if(stats.data.HP <= 0) killEnemy();
     }
 
     // Update is called once per frame
@@ -68,7 +71,6 @@ public class enemyType1 : MonoBehaviour
             moveLeft = false;
             nextChange = Time.time + 0.05f; //buffer to get off the wall
         }
-
 
     }
 

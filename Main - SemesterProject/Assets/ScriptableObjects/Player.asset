@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: Assembly-CSharp::EntityDataSO
   Name: Little Green Guy
+  IDName: Player
   MaxHP: 50
   HP: 50
   MaxSP: 10
   SP: 7
   Attack: 5
   Defense: 0
-  lastPos: {x: 0, y: 0, z: 0}
+  lastPos: {x: 3.45, y: -0.451677, z: 0}
+  isInBattle: 0
