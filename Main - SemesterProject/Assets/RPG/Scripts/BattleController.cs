@@ -6,7 +6,7 @@ using TMPro;
 using System.Collections;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-
+// hi jacob :)
 enum BattleState { START, PLAYERTURN_START, PLAYERTURN_SELECT, PLAYERTURN_ACTION, ENEMYTURN_START, ENEMYTURN_ACTION, ENDWIN, ENDLOSE, ENDPREMATURE };
 /*
 START: First State, used to set up the fight before player is allowed to take action.
