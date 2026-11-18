@@ -126,11 +126,11 @@ public class BattleController : MonoBehaviour
             case BattleState.ENEMYTURN_START:
                 if (areAllEnemiesDead())
                 {
+                    saveState.returning = true;
                     reportBattleUpdate(
                         "You won! :)",
                         BattleState.ENDWIN
                     );
-
                 }
                 else
                 {
