@@ -53,12 +53,14 @@ public class saveState : MonoBehaviour
     public EntityDataSO getEnemy(string enemyType, EntityDataSO template){
         for(int i = 0; i < enemies.Count; i++){
             if(enemies[i].stats.IDName == enemyType && !enemies[i].exists){
+                Debug.Log("Returning Enemy Data");
                 enemies[i].exists = true;
                 return enemies[i].stats;
             }
         }
 
-        if(returning) Debug.Log("Enemy Data not found");
+
+        if(returning) {Debug.Log("Enemy Data not found");}
 
         //if makes it here, it does not exist yet, needs to be created
         
@@ -73,6 +75,12 @@ public class saveState : MonoBehaviour
         }
 
         return null;
+    }
+
+    public void allEnemiesDontExist(){
+        for(int i = 0; i < enemies.Count; i++){
+            enemies[i].exists = false;
+        }
     }
 
 

@@ -2,13 +2,17 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement; // Required for scene switching
 
+
 // This is a list of stats used by both the players and enemies in the RPG sections
+// Runs before scripts at Default Time (0)
+[DefaultExecutionOrder(-50)]
 public class Entity : MonoBehaviour
 {
     [Header("Entity Data")]
     public EntityDataSO data = null;
 
     public EntityDataSO template;// Start is called once before the first execution of Update after the MonoBehaviour is created
+    
     
     void Start()
     {
@@ -19,6 +23,7 @@ public class Entity : MonoBehaviour
 
             if(saveState.returning){
                 transform.position = data.lastPos;
+                Debug.Log("Updating position of" + gameObject.name);
             }
         }
 

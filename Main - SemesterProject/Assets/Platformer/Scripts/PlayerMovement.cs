@@ -35,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
 
         //enable player controls
         saveState.controls.Player.Enable();
+        saveState.instance.allEnemiesDontExist();
         saveState.leaving = false;
     }
 
