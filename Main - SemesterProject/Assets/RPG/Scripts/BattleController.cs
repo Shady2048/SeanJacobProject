@@ -63,14 +63,16 @@ public class BattleController : MonoBehaviour
 
     public List<EntityDataSO> enemyData;
 
+    void Awake(){
+        enemyData = saveState.instance.getBattleEnemies();
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         saveState.controls.RPG_UI.Enable(); // Make sure to disable RPG controls when this scene finishes.
 
-        enemyData = saveState.instance.getBattleEnemies();
-        Debug.Log("Enemy Data Count: " + enemyData.Count);
-
+        
         state = BattleState.START;
         SetupBattle();
     }
@@ -287,18 +289,15 @@ public class BattleController : MonoBehaviour
 
     public EntityDataSO getEnemyData()
     {
-        Debug.Log("enemyData.count: " + enemyData.Count);
         for(int i = 0; i < enemyData.Count; ++i)
         {
             Debug.Log("Checking enemy data: " + enemyData[i].Name);
             if (enemyData[i].isInBattle)
             {
                 enemyData[i].isInBattle = false;  
-                Debug.Log("Found enemy Data and sending...");
                 return enemyData[i];
             }
         }
-        Debug.Log("Didn't Find enemy data");
         return null;
     }
 
