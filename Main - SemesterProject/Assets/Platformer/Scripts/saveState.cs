@@ -46,7 +46,7 @@ public class saveState : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //Debug.Log("Enemies in saveState: " + enemies.Count);
     }
 
     public EntityDataSO getEnemy(string enemyType, EntityDataSO template){

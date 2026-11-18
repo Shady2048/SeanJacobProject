@@ -21,6 +21,14 @@ public class Entity : MonoBehaviour
                 transform.position = data.lastPos;
             }
         }
+
+        if (SceneManager.GetActiveScene().name == "RPGTest")
+        {
+            if(data == null)
+            {
+                data = FindObjectsByType<BattleController>()[0].getEnemyData();
+            }
+        }
     }  
 
     // returns the damage dealt to the entity and whether or not the entity has died from the damage.
