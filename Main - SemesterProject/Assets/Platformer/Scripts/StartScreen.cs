@@ -8,6 +8,7 @@ public class StartScreen : MonoBehaviour
     void Start()
     {
         saveState.controls.TransitionScreens.Enable();
+        saveState.instance.clearAllEnemyData();
     }
 
     // Update is called once per frame

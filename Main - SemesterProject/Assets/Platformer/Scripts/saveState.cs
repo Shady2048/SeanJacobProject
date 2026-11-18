@@ -87,4 +87,8 @@ public class saveState : MonoBehaviour
 
         return endList;
     }
+
+    public void clearAllEnemyData(){
+        enemies.Clear();
+    }
 }

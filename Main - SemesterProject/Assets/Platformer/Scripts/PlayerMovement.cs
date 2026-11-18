@@ -42,6 +42,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if(Time.time >= stopKnockback){rb.linearVelocity = new Vector2(horizontalMovement * moveSpeed, rb.linearVelocity.y);}
         swordActions.flipPosition(horizontalMovement);
+
+        if(stats.data.HP <= 0){
+            saveState.controls.Player.Disable();
+            SceneManager.LoadScene("Retry");
+        }
     }
 
     public void Move(InputAction.CallbackContext context)
