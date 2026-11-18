@@ -32,6 +32,9 @@ public class PlayerMovement : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         rb = GetComponent<Rigidbody2D>();
         stats = GetComponent<Entity>();
+
+        //enable player controls
+        saveState.controls.Player.Enable();
     }
 
     // Update is called once per frame
@@ -80,6 +83,8 @@ public class PlayerMovement : MonoBehaviour
             entity.savePos();
         }
 
+        
+        saveState.controls.Player.Disable();
         SceneManager.LoadScene("RPGTest");
     }
 
