@@ -16,6 +16,7 @@ public class StartScreen : MonoBehaviour
     {
         if(saveState.controls.TransitionScreens.enabled){
             if(saveState.controls.TransitionScreens.Start.IsPressed()){
+                saveState.returning = false;
                 saveState.controls.TransitionScreens.Disable();
                 SceneManager.LoadScene("Platformer");
             }

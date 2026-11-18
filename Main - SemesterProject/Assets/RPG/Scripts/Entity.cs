@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement; // Required for scene switching
 
 // This is a list of stats used by both the players and enemies in the RPG sections
 public class Entity : MonoBehaviour
@@ -11,12 +12,14 @@ public class Entity : MonoBehaviour
     
     void Start()
     {
-        if(data == null){
-            data = saveState.instance.getEnemy(template.IDName, template);
-        }
+        if(SceneManager.GetActiveScene().name == "Platformer"){
+            if(data == null){
+                data = saveState.instance.getEnemy(template.IDName, template);
+            }
 
-        if(saveState.returning){
-            transform.position = data.lastPos;
+            if(saveState.returning){
+                transform.position = data.lastPos;
+            }
         }
     }  
 
