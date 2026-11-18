@@ -61,6 +61,8 @@ public class BattleController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        saveState.controls.RPG_UI.Enable(); // Make sure to disable RPG controls when this scene finishes.
+
         state = BattleState.START;
         SetupBattle();
     }
@@ -84,7 +86,20 @@ public class BattleController : MonoBehaviour
 
             case BattleState.PLAYERTURN_SELECT:
                 selectionIndicator.transform.position = enemies[selectedEnemyIndex].transform.position + new Vector3(-2, 0, 0);
+                if(saveState.controls.RPG_UI.enabled)
+                {
+                    if(saveState.controls.RPG_UI.Down.WasPressedThisFrame())
+                    {
+                        selectedEnemyIndex--;
+                        if (selectedEnemyIndex < 0) selectedEnemyIndex = enemies.Count - 1;
+                    }
+                    if (saveState.controls.RPG_UI.Up.WasPressedThisFrame())
+                    {
+                        selectedEnemyIndex++;
+                        if (selectedEnemyIndex >= enemies.Count) selectedEnemyIndex = 0;
+                    }
 
+                    }
                 
                 break;
             case BattleState.ENEMYTURN_START:
@@ -181,11 +196,6 @@ public class BattleController : MonoBehaviour
             selectedEnemyIndex--;
             if (selectedEnemyIndex < 0) selectedEnemyIndex = enemies.Count - 1;
         }   
-        if (context.started && state == BattleState.PLAYERTURN_SELECT)
-        {
-            selectedEnemyIndex--;
-            if (selectedEnemyIndex < 0) selectedEnemyIndex = enemies.Count - 1;
-        }
     }
 
     public void onDownPressed(InputAction.CallbackContext context)

@@ -1094,6 +1094,78 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "RPG_UI",
+            "id": "9608d18a-7408-4eff-ac06-f6fa93204059",
+            "actions": [
+                {
+                    "name": "Up",
+                    "type": "Button",
+                    "id": "d7c36492-d6fb-4c89-9a0f-108925cff2ba",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Down",
+                    "type": "Button",
+                    "id": "8362c039-4a78-4518-aae0-aac18c8c81be",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "0de773b0-9ce0-4c38-ac7d-b1928912f948",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Up",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "994edef9-e01b-41bb-b280-d4952ff8119a",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Up",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "691c94d9-f4bb-4c48-91f0-866c6fcad88a",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Down",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "255be064-c16b-47c4-a9d6-420e759d9747",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Down",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

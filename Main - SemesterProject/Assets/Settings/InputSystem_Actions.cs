@@ -1180,6 +1180,78 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""RPG_UI"",
+            ""id"": ""9608d18a-7408-4eff-ac06-f6fa93204059"",
+            ""actions"": [
+                {
+                    ""name"": ""Up"",
+                    ""type"": ""Button"",
+                    ""id"": ""d7c36492-d6fb-4c89-9a0f-108925cff2ba"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""Down"",
+                    ""type"": ""Button"",
+                    ""id"": ""8362c039-4a78-4518-aae0-aac18c8c81be"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""0de773b0-9ce0-4c38-ac7d-b1928912f948"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Up"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""994edef9-e01b-41bb-b280-d4952ff8119a"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Up"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""691c94d9-f4bb-4c48-91f0-866c6fcad88a"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Down"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""255be064-c16b-47c4-a9d6-420e759d9747"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Down"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -1271,6 +1343,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         // TransitionScreens
         m_TransitionScreens = asset.FindActionMap("TransitionScreens", throwIfNotFound: true);
         m_TransitionScreens_Start = m_TransitionScreens.FindAction("Start", throwIfNotFound: true);
+        // RPG_UI
+        m_RPG_UI = asset.FindActionMap("RPG_UI", throwIfNotFound: true);
+        m_RPG_UI_Up = m_RPG_UI.FindAction("Up", throwIfNotFound: true);
+        m_RPG_UI_Down = m_RPG_UI.FindAction("Down", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -1278,6 +1354,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, PlayerControls.Player.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PlayerControls.UI.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_TransitionScreens.enabled, "This will cause a leak and performance issues, PlayerControls.TransitionScreens.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_RPG_UI.enabled, "This will cause a leak and performance issues, PlayerControls.RPG_UI.Disable() has not been called.");
     }
 
     /// <summary>
@@ -1824,6 +1901,113 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="TransitionScreensActions" /> instance referencing this action map.
     /// </summary>
     public TransitionScreensActions @TransitionScreens => new TransitionScreensActions(this);
+
+    // RPG_UI
+    private readonly InputActionMap m_RPG_UI;
+    private List<IRPG_UIActions> m_RPG_UIActionsCallbackInterfaces = new List<IRPG_UIActions>();
+    private readonly InputAction m_RPG_UI_Up;
+    private readonly InputAction m_RPG_UI_Down;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "RPG_UI".
+    /// </summary>
+    public struct RPG_UIActions
+    {
+        private @PlayerControls m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public RPG_UIActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "RPG_UI/Up".
+        /// </summary>
+        public InputAction @Up => m_Wrapper.m_RPG_UI_Up;
+        /// <summary>
+        /// Provides access to the underlying input action "RPG_UI/Down".
+        /// </summary>
+        public InputAction @Down => m_Wrapper.m_RPG_UI_Down;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_RPG_UI; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="RPG_UIActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(RPG_UIActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="RPG_UIActions" />
+        public void AddCallbacks(IRPG_UIActions instance)
+        {
+            if (instance == null || m_Wrapper.m_RPG_UIActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_RPG_UIActionsCallbackInterfaces.Add(instance);
+            @Up.started += instance.OnUp;
+            @Up.performed += instance.OnUp;
+            @Up.canceled += instance.OnUp;
+            @Down.started += instance.OnDown;
+            @Down.performed += instance.OnDown;
+            @Down.canceled += instance.OnDown;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="RPG_UIActions" />
+        private void UnregisterCallbacks(IRPG_UIActions instance)
+        {
+            @Up.started -= instance.OnUp;
+            @Up.performed -= instance.OnUp;
+            @Up.canceled -= instance.OnUp;
+            @Down.started -= instance.OnDown;
+            @Down.performed -= instance.OnDown;
+            @Down.canceled -= instance.OnDown;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="RPG_UIActions.UnregisterCallbacks(IRPG_UIActions)" />.
+        /// </summary>
+        /// <seealso cref="RPG_UIActions.UnregisterCallbacks(IRPG_UIActions)" />
+        public void RemoveCallbacks(IRPG_UIActions instance)
+        {
+            if (m_Wrapper.m_RPG_UIActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="RPG_UIActions.AddCallbacks(IRPG_UIActions)" />
+        /// <seealso cref="RPG_UIActions.RemoveCallbacks(IRPG_UIActions)" />
+        /// <seealso cref="RPG_UIActions.UnregisterCallbacks(IRPG_UIActions)" />
+        public void SetCallbacks(IRPG_UIActions instance)
+        {
+            foreach (var item in m_Wrapper.m_RPG_UIActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_RPG_UIActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="RPG_UIActions" /> instance referencing this action map.
+    /// </summary>
+    public RPG_UIActions @RPG_UI => new RPG_UIActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -2052,5 +2236,27 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnStart(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "RPG_UI" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="RPG_UIActions.AddCallbacks(IRPG_UIActions)" />
+    /// <seealso cref="RPG_UIActions.RemoveCallbacks(IRPG_UIActions)" />
+    public interface IRPG_UIActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Up" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnUp(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Down" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDown(InputAction.CallbackContext context);
     }
 }
