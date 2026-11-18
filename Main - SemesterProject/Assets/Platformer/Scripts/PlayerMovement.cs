@@ -77,6 +77,12 @@ public class PlayerMovement : MonoBehaviour
             //delay movement change
             stopKnockback = Time.time + knockbackDuration; //buffer to get off the wall
         }
+
+        if (collision.gameObject.CompareTag("goal"))
+        {
+            saveState.controls.Player.Disable();
+            SceneManager.LoadScene("Win");
+        }
     }
 
 
