@@ -1,0 +1,24 @@
+using UnityEngine;
+using UnityEngine.SceneManagement; // Required for scene switching
+
+public class StartScreen : MonoBehaviour
+{
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        saveState.controls.TransitionScreens.Enable();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if(saveState.controls.TransitionScreens.enabled){
+            if(saveState.controls.TransitionScreens.Start.IsPressed()){
+                saveState.controls.TransitionScreens.Disable();
+                saveState.controls.Player.Enable();
+                SceneManager.LoadScene("Platformer");
+            }
+        }
+    }
+}

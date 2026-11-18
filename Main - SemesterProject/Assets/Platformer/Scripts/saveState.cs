@@ -21,6 +21,7 @@ public class saveState : MonoBehaviour
     public List<myPair> enemies;
 
     public static bool returning = false;
+    public static PlayerControls controls;
 
 
     void Awake()
@@ -34,6 +35,7 @@ public class saveState : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         
         returning = false;
+        controls = new PlayerControls();
     }
 
     void Start()
