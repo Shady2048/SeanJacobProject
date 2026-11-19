@@ -5,6 +5,7 @@ public class enemyType1 : MonoBehaviour
     public Rigidbody2D rb;
     private BoxCollider2D boxCollider;
     private SpriteRenderer sr;
+    public enemyBasics eb;
 
     public float moveSpeed = 5f;
     float horizontalMovement = 0; //positive - right, negative - left, 0 - not moving
@@ -19,7 +20,8 @@ public class enemyType1 : MonoBehaviour
 
     //knockback vars 
     public float knockbackForce = 10f;
-    public float hitknockbackForce = 20f;
+    public float knockbackForceToPlayer = 10f;
+    public float hitTakenknockbackForce = 20f;
     public float knockbackDuration = 0.2f;
     private float stopKnockback = 0f;
     private Vector2 knockbackDirection;
@@ -37,6 +39,7 @@ public class enemyType1 : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         stats = GetComponent<Entity>();
         sr = GetComponent<SpriteRenderer>();
+        eb = GetComponent<enemyBasics>();
 
         //set layer masks
         wallLayer = LayerMask.GetMask("walls");
@@ -44,8 +47,6 @@ public class enemyType1 : MonoBehaviour
         //set enemy direction 
         horizontalMovement = moveLeft ? -1 : 1;
 
-        //if enemy dead upon return, kill it
-        if(stats.data.HP <= 0) killEnemy();
     }
 
     // Update is called once per frame
@@ -91,14 +92,12 @@ public class enemyType1 : MonoBehaviour
             //delay movement change
             stopKnockback = Time.time + knockbackDuration;
 
-            if(collision.gameObject.CompareTag("Player")){
-                collision.gameObject.GetComponent<Entity>().Damage(stats.data.Attack); //maybe update to be a seperate attack value for platformer later for balancing reasons
-                Debug.Log(collision.gameObject.GetComponent<Entity>().data.HP);
-            }else{
+            if(collision.gameObject.CompareTag("enemy")){
                 horizontalMovement = -horizontalMovement;
             }
         }
     }
+
 
     private void OnTriggerEnter2D(Collider2D trigger)
     {
@@ -108,7 +107,7 @@ public class enemyType1 : MonoBehaviour
             // Calculate direction away from the enemy
             Vector2 knockbackDirection = (transform.position - trigger.transform.position).normalized;
             // Apply instantaneous force
-            rb.AddForce(knockbackDirection * hitknockbackForce, ForceMode2D.Impulse);
+            rb.AddForce(knockbackDirection * hitTakenknockbackForce, ForceMode2D.Impulse);
 
             //delay movement change
             stopKnockback = Time.time + knockbackDuration;
@@ -128,14 +127,5 @@ public class enemyType1 : MonoBehaviour
         {
             stats.data.isInBattle = false;
         }
-    }
-
-
-
-    //kill enemy
-    public void killEnemy(){
-        sr.enabled = false;
-        rb.simulated = false;
-        boxCollider.enabled = false;
     }
 }

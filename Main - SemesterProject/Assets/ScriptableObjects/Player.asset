@@ -15,10 +15,10 @@ MonoBehaviour:
   Name: Little Green Guy
   IDName: Player
   MaxHP: 50
-  HP: 44
+  HP: 9
   MaxSP: 10
   SP: 7
   Attack: 5
   Defense: 0
-  lastPos: {x: 6.633502, y: -0.45169017, z: 0}
+  lastPos: {x: 3.8461387, y: -0.45167634, z: 0}
   isInBattle: 0

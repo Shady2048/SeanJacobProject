@@ -23,7 +23,7 @@ public class Entity : MonoBehaviour
 
             if(saveState.returning){
                 transform.position = data.lastPos;
-                Debug.Log("Updating position of" + gameObject.name);
+                Debug.Log("Updating position of " + gameObject.name);
             }
         }
 

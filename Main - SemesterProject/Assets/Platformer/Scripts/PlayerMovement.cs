@@ -21,7 +21,6 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundlayer;
 
     //knockback vars
-    public float knockbackForce = 10f;
     public float knockbackDuration = 0.2f;
     private float stopKnockback = 0f;
     private Vector2 knockbackDirection;
@@ -83,8 +82,11 @@ public class PlayerMovement : MonoBehaviour
         {
             // Calculate direction away from the enemy
             Vector2 knockbackDirection = (transform.position - collision.transform.position).normalized;
+
             // Apply instantaneous force
-            rb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
+            enemyType1 check = collision.gameObject.GetComponent<enemyType1>();
+            if(check != null)
+            rb.AddForce(knockbackDirection * check.knockbackForceToPlayer, ForceMode2D.Impulse);
 
             //delay movement change
             stopKnockback = Time.time + knockbackDuration; //buffer to get off the wall

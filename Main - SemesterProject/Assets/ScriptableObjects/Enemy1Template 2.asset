@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Enemy1Template 2
   m_EditorClassIdentifier: Assembly-CSharp::EntityDataSO
   Name: Enemy1.2
-  IDName: Enemy1
+  IDName: Enemy1.2
   MaxHP: 30
   HP: 30
   MaxSP: 5

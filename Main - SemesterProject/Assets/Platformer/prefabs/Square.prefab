@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8885898495235582132}
   - component: {fileID: 1329375192047515256}
   - component: {fileID: 1349886523551766544}
+  - component: {fileID: 6434014208001611422}
   m_Layer: 10
   m_Name: Square
   m_TagString: enemy
@@ -182,6 +183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   rb: {fileID: 0}
+  eb: {fileID: 0}
   moveSpeed: 6
   moveLeft: 0
   wallLayer:
@@ -189,7 +191,8 @@ MonoBehaviour:
     m_Bits: 0
   changeDelay: 2
   knockbackForce: 10
-  hitknockbackForce: 20
+  knockbackForceToPlayer: 10
+  hitTakenknockbackForce: 15
   knockbackDuration: 0.2
 --- !u!114 &1349886523551766544
 MonoBehaviour:
@@ -205,3 +208,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Entity
   data: {fileID: 0}
   template: {fileID: 11400000, guid: 266177c52ed59784080c62dd2c8e6f27, type: 2}
+--- !u!114 &6434014208001611422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8227310435926930969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e87430803a183054ebed88df2fb9dd8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::enemyBasics
+  rb: {fileID: 0}

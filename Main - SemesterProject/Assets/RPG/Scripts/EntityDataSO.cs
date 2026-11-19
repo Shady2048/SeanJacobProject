@@ -14,4 +14,5 @@ public class EntityDataSO : ScriptableObject
     public int Defense = 0;
     public Vector3 lastPos;
     public bool isInBattle = false;
+    public bool canBattle = true;
 }

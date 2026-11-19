@@ -37,7 +37,7 @@ public class SwordMechanics : MonoBehaviour
             trigger.gameObject.GetComponent<Entity>().Damage(stats.data.Attack); //maybe update to be a seperate attack value for platformer later for balancing reasons
             Debug.Log(trigger.gameObject.GetComponent<Entity>().data.HP);
             if(trigger.gameObject.GetComponent<Entity>().data.HP <= 0){
-                trigger.gameObject.GetComponent<enemyType1>().killEnemy(); //update later to be more of a general enemy script
+                trigger.gameObject.GetComponent<enemyBasics>().killEnemy(); //update later to be more of a general enemy script
             }
             
         }
