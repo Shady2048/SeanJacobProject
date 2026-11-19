@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private BoxCollider2D boxCollider;
     public SwordMechanics swordActions;
+    private Animator animator;
 
     //entity stats
     private Entity stats;
@@ -32,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         rb = GetComponent<Rigidbody2D>();
         stats = GetComponent<Entity>();
+        animator = GetComponent<Animator>();
 
         //enable player controls
         saveState.controls.Player.Enable();
@@ -48,6 +50,16 @@ public class PlayerMovement : MonoBehaviour
         if(stats.data.HP <= 0){
             saveState.controls.Player.Disable();
             SceneManager.LoadScene("Retry");
+        }
+
+
+        //for easy input control
+        if(saveState.controls.Player.enabled){
+            if(saveState.controls.Player.Attack.IsPressed()){
+                animator.SetBool("isAttacking", true);
+            }else{
+                animator.SetBool("isAttacking", false);
+            }
         }
     }
 

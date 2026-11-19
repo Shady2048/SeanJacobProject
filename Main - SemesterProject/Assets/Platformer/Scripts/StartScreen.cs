@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement; // Required for scene switching
 public class StartScreen : MonoBehaviour
 {
 
+    public EntityDataSO playerStats;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -17,6 +19,7 @@ public class StartScreen : MonoBehaviour
         if(saveState.controls.TransitionScreens.enabled){
             if(saveState.controls.TransitionScreens.Start.IsPressed()){
                 saveState.returning = false;
+                playerStats.HP = playerStats.MaxHP;
                 saveState.controls.TransitionScreens.Disable();
                 SceneManager.LoadScene("Platformer");
             }

@@ -20,8 +20,11 @@ public class SwordMechanics : MonoBehaviour
     }
 
     public void flipPosition(float face){
-        if((face < 0 && facing == 1) || (face > 0 && facing == -1)) {
-            transform.localPosition = -transform.localPosition;
+        if(face < 0 && facing == 1) {
+            transform.parent.parent.rotation = Quaternion.Euler(0f, 0f, 0f);
+            facing = -facing;
+        }else if(face > 0 && facing == -1) {
+            transform.parent.parent.rotation = Quaternion.Euler(0f, 180f, 0f);
             facing = -facing;
         }
     }
