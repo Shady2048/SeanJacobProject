@@ -7,12 +7,13 @@ using System.Collections;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 // hi jacob :)
-enum BattleState { START, PLAYERTURN_START, PLAYERTURN_SELECT, PLAYERTURN_ACTION, ENEMYTURN_START, ENEMYTURN_ACTION, ENDWIN, ENDLOSE, ENDPREMATURE };
+enum BattleState { START, PLAYERTURN_START, PLAYERTURN_SELECT, PLAYERTURN_ACTION, PLAYERTURN_RUN, ENEMYTURN_START, ENEMYTURN_ACTION, PLAYER_LOST, ENDWIN, ENDLOSE, ENDPREMATURE };
 /*
 START: First State, used to set up the fight before player is allowed to take action.
 PLAYERTURN_START: Player Starts turn.
 PLAYERTURN_SELECT: Player is selecting a target
 PLAYERTURN_ACTION: Player has chosen an action, waiting for the action to finish.
+PLAYERTURN_RUN: Player chooses to run from battle.
 ENEMYTURN_START: Enemy Starts turn.
 ENEMYTURN_ACTION: Enemy attacks happen
 ENDWIN: Player has won the battle.
@@ -91,7 +92,9 @@ public class BattleController : MonoBehaviour
         switch (state)
         {
             case BattleState.PLAYERTURN_START:
-                battleUpdateText.text = "What will Player do?";       
+           
+                playerActionTaken = false; // Reset the player action taken flag for the next turn.
+                battleUpdateText.text = "What will Player do?";
                 break;
 
             case BattleState.PLAYERTURN_SELECT:
@@ -128,12 +131,15 @@ public class BattleController : MonoBehaviour
                 {
                     playerAction();
                     playerActionTaken = true;
-                }
+                } 
+                break;
+            case BattleState.PLAYERTURN_RUN:
+                reportBattleUpdate(player.GetComponent<Entity>().data.Name + " ran away!", BattleState.ENDPREMATURE);
+
                 break;
             case BattleState.ENEMYTURN_START:
                 if (areAllEnemiesDead())
                 {
-                    saveState.returning = true;
                     reportBattleUpdate(
                         "You won! :)",
                         BattleState.ENDWIN
@@ -143,21 +149,35 @@ public class BattleController : MonoBehaviour
                 {
                     enemyTurn();
                 }
+
+                break;
+
+            case BattleState.PLAYER_LOST:
+                reportBattleUpdate(
+                    "You lost! :(",
+                    BattleState.ENDLOSE
+                );
                 break;
             case BattleState.ENDWIN:
-                saveState.controls.RPG_UI.Disable();
-
-                SceneManager.LoadScene("Platformer");
+                leaveSceneTo("Platformer");
 
                 break;
             case BattleState.ENDLOSE:
+                leaveSceneTo("Retry");
+
                 break;
             case BattleState.ENDPREMATURE:
-                saveState.controls.RPG_UI.Disable();
-
-                SceneManager.LoadScene("Platformer");
+                leaveSceneTo("Platformer");
                 break;
         }
+    }
+
+    void leaveSceneTo(string sceneName)
+    {
+        saveState.returning = true;
+        saveState.controls.RPG_UI.Disable();
+
+        SceneManager.LoadScene(sceneName);
     }
 
     void SetupBattle()
@@ -252,7 +272,7 @@ public class BattleController : MonoBehaviour
     public void onRunButtonClicked()
     {
         Debug.Log("Pressed Run");
-        state = BattleState.ENDPREMATURE;
+        state = BattleState.PLAYERTURN_RUN;
     }
 
     void playerAction()
@@ -272,10 +292,22 @@ public class BattleController : MonoBehaviour
         (int dmg, bool isDead) dmgResult = player.GetComponent<Entity>().Damage(enemies[0].GetComponent<Entity>().data.Attack + Random.Range(-2,2));
         UpdateMenus();
         state = BattleState.ENEMYTURN_ACTION;
-        reportBattleUpdate(
-            enemies[0].GetComponent<Entity>().data.Name + " attacks " + player.GetComponent<Entity>().data.Name + " for " + dmgResult.dmg + " damage!", 
-            BattleState.PLAYERTURN_START
-            );
+        
+        if(player.GetComponent<Entity>().data.HP <= 0)
+        {
+            reportBattleUpdate(
+                enemies[0].GetComponent<Entity>().data.Name + " attacks " + player.GetComponent<Entity>().data.Name + " for " + dmgResult.dmg + " damage! ",
+                BattleState.PLAYER_LOST
+                );
+        }
+        else
+        {
+            reportBattleUpdate(
+                enemies[0].GetComponent<Entity>().data.Name + " attacks " + player.GetComponent<Entity>().data.Name + " for " + dmgResult.dmg + " damage!",
+                BattleState.PLAYERTURN_START
+                );
+        }
+
     }
 
     bool areAllEnemiesDead()
@@ -307,6 +339,7 @@ public class BattleController : MonoBehaviour
     void reportBattleUpdate(string update, BattleState nextState)
     {
         battleUpdateText.text = update;
+        Debug.Log(update);
         StartCoroutine(reportBattleUpdateIENUM(nextState));
     }
     private IEnumerator reportBattleUpdateIENUM(BattleState nextState)

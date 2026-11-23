@@ -20,6 +20,7 @@ public class StartScreen : MonoBehaviour
             if(saveState.controls.TransitionScreens.Start.IsPressed()){
                 saveState.returning = false;
                 playerStats.HP = playerStats.MaxHP;
+                playerStats.SP = playerStats.MaxSP;
                 saveState.controls.TransitionScreens.Disable();
                 SceneManager.LoadScene("Platformer");
             }
